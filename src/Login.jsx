@@ -1,17 +1,26 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import { Fragment } from "react";
 import AuthContext from "context/AuthProvider";
-import axios from "./api/axios";
+import axios from "./components/api/axios";
 
-const LOGIN_URL = "/auth";
+//este path tiene que coincidir con el backend
+const LOGIN_URL = "https://tthubs.green-projects.com.gr/auth/api/auth";
 
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
-  const userRef = useRef();
+  //useRef variable  que no renderiza la app. Distinto a los estados. 
+  const userRef = useRef(); //crear el objeto. El nombre no se modifica independientemente de los cambios de estado.
   const errRef = useRef();
 
-  const [user, setUser] = useState("");
-  const [pwd, setPwd] = useState("");
+  const [username, setUser] = useState("");
+
+  const [client_id, setClient_id] = useState("");
+
+  const [client_secret, setClient_secret] = useState("");
+
+  const [grant_type, setGrant_type] = useState("");
+
+  const [password, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -23,26 +32,36 @@ const Login = () => {
   //para cuando cambia el user o el pwd. Cuando se cambia el pass o el usuario desaparece el mensaje de error
   useEffect(() => {
     setErrMsg("");
-  }, [user, pwd]);
+  }, [username, password]);
 
+  //se ejecuta al guardar el formulario. 
+  //event para prevenir el comportamiento por defecto del formulario el cual recarga la página
   const handleSubmit = async (e) => {
     e.preventDefault(); //prevenir el reaload
 
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ user, pwd }),
+        JSON.stringify({ username, password }),
         {
           headers: { "Content-Type": "application/json" },
           witCredentials: true,
-        }
+
+        }, config
+
+
       );
 
       console.log(JSON.stringify(response?.data));
+      console.log("username:", username)
+      console.log("pass: ", password)
+
       //console.log(JSON.stringify(response))
+      //aqui obtenemos el accessToken del servido que viene con el response del axios.post
       const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
-      setAuth({ user, pwd, roles, accessToken });
+      //los roles dependen de como esté el token y se lo pasariamos a setAuth
+      //const roles = response?.data?.roles;
+      setAuth({ username, password, accessToken });
 
       setUser(" ");
       setPwd(" ");
@@ -57,7 +76,16 @@ const Login = () => {
       } else {
         setErrMsg("Login Failed");
       }
+      //para esto tenemos el aria-live, lo uso para desarollo
       errRef.current.focus();
+    }
+  };
+
+  const config = {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "http://localhost:3000",
+      "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
     }
   };
 
@@ -81,6 +109,7 @@ const Login = () => {
             {errMsg}{" "}
           </p>
           <h1>Sign In</h1>
+
           <form onSubmit={handleSubmit}>
             <label htmlFor="username">Username:</label>{" "}
             <input
@@ -89,7 +118,7 @@ const Login = () => {
               ref={userRef}
               autoComplete="off"
               onChange={(e) => setUser(e.target.value)}
-              value={user}
+              value={username}
               required
             />
             <label htmlFor="password">Password: </label>{" "}
@@ -97,19 +126,12 @@ const Login = () => {
               type="password"
               id="password"
               onChange={(e) => setPwd(e.target.value)}
-              value={pwd}
+              value={password}
               required
             />
             <button>Sign In</button>
           </form>
-          <p>
-            Need an Account?
-            <br />
-            <span className="line">
-              {/*put router link here*/}
-              <a href="#">Sign Up</a>
-            </span>
-          </p>
+
         </section>
       )}
     </Fragment>

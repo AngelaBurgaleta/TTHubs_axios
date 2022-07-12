@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Statistics from "./components/pages/Statistics";
 import { Sidebar } from "./components/Sidebar";
 import { FoodTable } from "components/FoodTable";
-import Login from "components/Login";
+import Login from "./Login";
+import Register from "Register";
 
 export function App(){
 
