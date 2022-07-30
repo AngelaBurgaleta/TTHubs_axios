@@ -27,22 +27,13 @@ export function Sidebar(props) {
     >
       <div className="logo">
         <div className="simple-text logo-normal">
-        {/*} TTHubs*/}
-           <img src={logoTTinfo} alt="react-logo" />
+         TTHubs
+          {/* <img src={logoTT} alt="react-logo" />*/}
         </div>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
-          <li>
-            <NavLink
-              to="/statistics"
-              className="nav-link"
-              activeClassName="active"
-            >
-              Statistics
-              <i className="nc-icon nc-sound-wave" />
-            </NavLink>
-          </li>
+
           <li>
             <NavLink
               to="/foodtable"
@@ -50,7 +41,7 @@ export function Sidebar(props) {
               activeClassName="active"
               aria-current="page"
             >
-              Food Table
+              Nutritional Profile
               <i className="nc-icon nc-tile-56" />
             </NavLink>
           </li>

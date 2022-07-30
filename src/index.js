@@ -26,7 +26,7 @@ import "assets/scss/paper-dashboard.scss?v=1.3.0";
 import "assets/demo/demo.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
-import AdminLayout from "layouts/Admin.js";
+//import AdminLayout from "layouts/Admin.js";
 import { App } from "./App";
 
 ReactDOM.render(

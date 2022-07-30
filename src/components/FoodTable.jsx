@@ -48,11 +48,25 @@ export function FoodTable() {
 
   //Referencia a la db
   const foodsCollectionRefs = collection(db, "data");
-
-  //PAGINACION
-
-  //PAGINACION
+ //PAGINACION
   /*
+  db.collection('data').onSnapshot((snapshot)) => {
+    cargarDocumentos(sapshot.docs)
+    
+  }
+  
+  //PAGINACION
+  const cargarDocumentos = (foods) => {
+
+    if(foods.length>0) {
+
+      documetos.forEach(food => )
+  
+}
+    
+  }
+
+ 
   const btnNext = document.createElement('button');
   btn.innerText = 'Next Page';
   document.body.append(btn)
@@ -219,7 +233,7 @@ const cargarDocumentos = () => {
                     >
                       <i className="nc-icon nc-simple-add"></i>
                     </Button>
-                    <div className="navbar-brand">Food Table </div>
+                    <div className="navbar-brand">Nutritional Profile </div>
                   </div>
                 </div>
 
@@ -334,10 +348,10 @@ const cargarDocumentos = () => {
                               <li className="page-item">
                                 <a arial-label="Previous" className="page-link">
                                   <span aria-hidden="true" color="success">
-                                    <i
+                                    <button
                                       aria-hidden="true"
                                       className="fa fa-angle-double-left"
-                                    ></i>
+                                    ></button>
                                   </span>
                                 </a>
                               </li>
@@ -360,10 +374,11 @@ const cargarDocumentos = () => {
                               <li className="page-item">
                                 <a arial-label="Next" className="page-link">
                                   <span aria-hidden="true">
-                                    <i
+                                    <button
+                                    
                                       aria-hidden="true"
                                       className="fa fa-angle-double-right"
-                                    ></i>
+                                    ></button>
                                   </span>
                                 </a>
                               </li>

@@ -18,8 +18,6 @@ export default function Pagina1({
   foodsubgroupSelect,
   countryInput,
   countrySelect,
-  country,
-  setCountry,
   fibreInput,
   saturatedfattyacidsInput,
   monounsaturatedfattyacidsInput,
@@ -57,8 +55,9 @@ export default function Pagina1({
         </div>
         <label>Food Group*</label>
         <div
-          className="form-group"
-          style={errors.FoodGroup ? styleDanger : null}
+          className={
+            errors.FoodGroup ? "has-danger form-group" : "form-group"
+          }
         >
           <Controller
             control={control}
@@ -113,18 +112,10 @@ export default function Pagina1({
             readOnly={showInfo}
             render={({ field }) => (
               <Creatable
-                isMulti
                 defaultInputValue={defaultValue?.Country}
                 isClearable
                 options={countrySelect}
                 {...field}
-                onChange={(value, action) => {
-                  if (action.action === "select-option") {
-                    field.onChange(value);
-                    console.log("Console, value", value);
-                    console.log("Console, action", action);
-                  }
-                }}
               />
             )}
           />

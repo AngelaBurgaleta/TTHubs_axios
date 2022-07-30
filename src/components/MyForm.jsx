@@ -63,7 +63,7 @@ export default function MyForm({
   showInfo,
 }) {
   
-  console.log(country);
+  //console.log(country);
   
 
   const {
@@ -442,9 +442,9 @@ export default function MyForm({
       typeof datos.FoodSubgroup === "string"
         ? datos.FoodSubgroup
         : datos.FoodSubgroup.value;
-    if (country) {
+    if (datos.Country) {
       datos.Country =
-        typeof country === "array" ? country : country.value;
+        typeof datos.Country === "string" ? datos.Country : datos.Country.value;
     }
 
     if (datos.District) {
@@ -692,7 +692,7 @@ export default function MyForm({
 
   const countryInput = register("Country", { required: false });
 
-  const [country, setCountry] = useState([])
+  //const [country, setCountry] = useState([])
 
   const districtInput = register("District", { required: false });
 
@@ -1144,8 +1144,8 @@ export default function MyForm({
               foodsubgroupInput={foodsubgroupInput}
               foodsubgroupSelect={foodsubgroupSelect}
               countryInput={countryInput}
-              country = {country}
-              setCountry = {setCountry}
+              //country = {country}
+              //setCountry = {setCountry}
               districtInput={districtInput}
               countrySelect={countrySelect}
               waterInput={waterInput}
