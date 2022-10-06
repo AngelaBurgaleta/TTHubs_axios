@@ -2,17 +2,17 @@ import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { FoodTable } from "components/FoodTable";
-
+import Login from "./Login";
 
 
 //para leer el localStorage
 //array de dependencias vacio para que solo se ejecute cuando se renderice la pagina
 
 
-/*
+
 export function App(){
- 
- 
+ /*
+  
  useEffect(() => {
  const loggedUserJSON = window.localStorage.getItem('loggedNoteAppUser')
  if(loggedUserJSON) {
@@ -32,8 +32,8 @@ const handleLogout = () => {
  window.localStorage.remove('loggedUserJSON')
 }
 
- 
 
+*/
  return (
    <div>
      <Login />
@@ -41,8 +41,8 @@ const handleLogout = () => {
  )
 }
 
-*/
-
+ 
+/* 
 export function App() {
   function NotFound() {
     return (
@@ -70,3 +70,6 @@ export function App() {
   );
 
 }
+
+*/
+

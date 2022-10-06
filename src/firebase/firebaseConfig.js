@@ -1,3 +1,5 @@
+
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
@@ -21,3 +23,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app, {ignoreUndefinedProperties: true});
+/* CON LA BBDD ANTIGUA
+
+//con variable de entorno
+
+//$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\aburgaleta\Desktop\TTHubs\Prueba_hosting\Secrets\upm-lifestech-firebase-adminsdk-90kn1-e4579ee6d6.json"
+import firebaseAdmin from 'firebase-admin'
+'use strict';
+
+const { initializeApp, applicationDefault } = require('firebase-admin/app');
+const {getFirestore} = require('firebase-admin/firestore')
+//const { getFirestore, Timestamp, GeoPoint } = require('firebase-admin/firestore');
+
+
+
+const app = initializeApp({
+  credential: applicationDefault(),
+  databaseURL: 'https://data.firebaseio.com'
+});
+
+
+export const db = getFirestore(app, {ignoreUndefinedProperties: true});
+*/
