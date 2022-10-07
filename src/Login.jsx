@@ -17,8 +17,8 @@ const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
 
-  const [user, setUser] = useState('');
-  const [pwd, setPwd] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -29,13 +29,13 @@ const Login = () => {
 
   useEffect(() => {
     setErrMsg('');
-  }, [user, pwd])
+  }, [username, password])
 
 
   const handleSubmitSuccess = async (e) => {
     e.preventDefault()
-    setUser(' ')
-    setPwd(' ')
+    setUsername(' ')
+    setPassword(' ')
     setSuccess(true)
 
   }
@@ -47,7 +47,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ user, pwd }),
+        JSON.stringify({ username, password }),
         {
           headers: { "Content-Type": "application/json" },
           witCredentials: true,
@@ -56,19 +56,22 @@ const Login = () => {
 
 
       );
-      console.log(JSON.stringify(response?.data))
+      console.log("access Token: " + JSON.stringify(response?.data?.access_token))
+      console.log("refresh Token: " + JSON.stringify(response?.data?.refresh_token))
+      console.log("response: " + JSON.stringify(response?.data))
       //console.log(JSON.stringify(response))
-      const accessToken = response?.data?.accessToken;
+      const accessToken = response?.data?.access_token;
+      console.log(accessToken)
       //para guardarlo en el contexto global
-      setAuth({ user, pwd, accessToken })
-      setUser(' ')
-      setPwd(' ')
+      setAuth({ username, password, accessToken })
+      setUsername(' ')
+      setPassword(' ')
       setSuccess(' ')
     } catch (err) {
       if (!err?.response) {
         setErrMsg('No server response')
       } else if (err.respose?.status === 400) {
-        setErrMsg('Missing Username or Password')
+        setErrMsg('Missing username or Password')
       } else if (err.response?.status === 401) {
         setErrMsg('Unauthorized')
       } else {
@@ -107,23 +110,23 @@ const Login = () => {
             {errMsg}{" "}
           </p>
           <h1>Sign In</h1>
-          <form onSubmit={handleSubmitSuccess}>
+          <form onSubmit={handleSubmit}>
             <label htmlFor="username">Username: </label>{" "}
             <input
               type="text"
               id="username"
               ref={userRef}
               autoComplete="off"
-              onChange={(e) => setUser(e.target.value)}
-              value={user}
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
               required
             />
             <label htmlFor="password">Password: </label>{" "}
             <input
               type="password"
               id="password"
-              onChange={(e) => setPwd(e.target.value)}
-              value={pwd}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
               required
             />
             <button>Sign In</button>
