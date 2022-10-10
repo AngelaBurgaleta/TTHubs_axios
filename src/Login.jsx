@@ -5,6 +5,7 @@ import axios from './api/axios'
 import { FoodTable } from "components/FoodTable";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 import {
   Card,
   CardHeader,
@@ -36,7 +37,11 @@ const GATEWAY_URL = "https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT";
 
 
 const Login = () => {
+  //para el contexto de la página web
   const { setAuth } = useContext(AuthContext);
+
+  //getAuth para autenticar firebase
+  const auth = getAuth();
 
   //Refs for set the focused on the input
   const userRef = useRef();
@@ -81,21 +86,39 @@ const Login = () => {
 
 
       );
-      console.log("access Token: " + JSON.stringify(response?.data?.access_token))
-      console.log("refresh Token: " + JSON.stringify(response?.data?.refresh_token))
-      console.log("response: " + JSON.stringify(response?.data))
+      console.log("access Token griego: " + JSON.stringify(response?.data?.access_token))
+      //console.log("refresh Token griego: " + JSON.stringify(response?.data?.refresh_token))
+      //console.log("response griego: " + JSON.stringify(response?.data))
       //console.log(JSON.stringify(response))
       const accessToken = response?.data?.access_token;
-      console.log(accessToken)
+      //console.log(accessToken)
 
       try {
-        const envio = await axios.post(
+        const responseFirebase = await axios.post(
           GATEWAY_URL,
           accessToken
-        )
+        );
+        const firebaseToken = responseFirebase?.data?.access_token
+        
+        console.log("access token firebase : " + JSON.stringify(firebaseToken))
+        
 
-        console.log("enviado respuesta!!! : " + JSON.stringify(envio?.data))
-        console.log("enviado!!  : " + accessToken)
+       //auth with custom token firebase
+    signInWithCustomToken(auth, firebaseToken)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log("user Logs :" + user)
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Error firebase: " + error)
+      // ...
+    });
+
+
       } catch (error) {
 
         console.log('token no enviado: ' + error)
@@ -119,6 +142,8 @@ const Login = () => {
       }
       errRef.current.focus();
     }
+
+    
   }
 
   return (
@@ -185,7 +210,7 @@ const Login = () => {
                     }}>
 
                       <div className="form-group">
-                        <label htmlFor="username" style={{fontSize: "25px"}}>Username: </label>{" "}
+                        <label htmlFor="username" style={{ fontSize: "25px" }}>Username: </label>{" "}
                         <input
                           type="text"
                           id="username"
@@ -207,7 +232,7 @@ const Login = () => {
                     }} >
 
                       <div className="form-group">
-                        <label htmlFor="password" style={{fontSize: "25px"}}>Password: </label>{" "}
+                        <label htmlFor="password" style={{ fontSize: "25px" }}>Password: </label>{" "}
                         <input
                           type="password"
                           id="password"
@@ -225,7 +250,7 @@ const Login = () => {
                       columnGap: '40px'
 
                     }} >
-                      <Button  color = "success">Sign In</Button>
+                      <Button color="success">Sign In</Button>
                     </div>
                   </div>
                 </Form>
