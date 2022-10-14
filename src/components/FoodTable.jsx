@@ -11,8 +11,12 @@ import {
   deleteDoc,
   orderBy,
   onSnapshot,
+  startAt,
+  limit,
+  startAfter,
   query,
   where,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import {
@@ -40,7 +44,8 @@ import {
 import MyForm from "./MyForm";
 import Query from "./Query";
 import InfoFood from "./InfoFood";
-//import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { async } from "@firebase/util";
+
 
 export function FoodTable() {
   //Declarar e inicializar lista de foods
@@ -48,63 +53,7 @@ export function FoodTable() {
 
   //Referencia a la db
   const foodsCollectionRefs = collection(db, "data");
- //PAGINACION
-  /*
-  db.collection('data').onSnapshot((snapshot)) => {
-    cargarDocumentos(sapshot.docs)
-    
-  }
-  
-  //PAGINACION
-  const cargarDocumentos = (foods) => {
 
-    if(foods.length>0) {
-
-      documetos.forEach(food => )
-  
-}
-    
-  }
-
- 
-  const btnNext = document.createElement('button');
-  btn.innerText = 'Next Page';
-  document.body.append(btn)
-  let lastDocument: any = null;
-  btnNext.addEventListener('click', () => {
-    const query = foodsCollectionRefs
-    .orderBy('Nombre')
-    .startAfter(lastDocument)
-    query.limit(2).get().then( snap => {
-      lastDocument = snap.docs[snap.docs.length -1] ||
-      retornaDocumentos(snap)
-    })
-  })
-  btn.addEventListener('click', () => {
-    console.log('click')
-  })
-  ------------------------------
-  
-  const botonSiguiente = document.getElementById('botonSiguiente')
-  const botonAnterior = document.getElementById('botonAnterior')
-  const contenedorCards = document.getElementById('cards')
-  //Evento cada vez que cambia un valor de la bbdd
-  //snapshot es comom la captura
-  db.collection('data').onSnapshot((snapshot) =>
-  //console.log(snapshot.docs[0].data())
-  cargarDocumentos(snapshot.docs)
-})
-//por cada usuario queremos agregar una card (?)
-const cargarDocumentos = () => {
-  if(cargarDocumentos.length > 0) {
-    cargarDocumentos.forEach(documento => {
-      contenedorCards.innerHTML += `
-      
-      `;
-    })
-  }
-}
-*/
 
   //ORDENAR ALFABÉTICAMENTE
   const [order, setOrder] = useState("ASC");
@@ -133,21 +82,95 @@ const cargarDocumentos = () => {
     setSearch(event.target.value);
   };
 
+  //PAGINACION
+
+
+
+  const [lastVisible, setLastVisible] = useState({});
+  const [firstVisible, setFirstVisible] = useState({});
   //Para que la vista se renderice a la tabla de foods
-
   useEffect(() => {
+    const first = query(foodsCollectionRefs, orderBy("Name"), limit(3));
     const getFoods = async () => {
-      const data = await getDocs(foodsCollectionRefs);
+      const data = await getDocs(first);
+      const lastVisible = data.docs[data.docs.length - 1];
+      const firstVisible = data.docs[0]
+      setLastVisible(lastVisible)
+      setFirstVisible(firstVisible)
 
-      console.log(data);
+
       setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       console.log(
         setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       );
+
     };
 
     getFoods();
+    
+
+
+
   }, []);
+
+  /*
+   useEffect(() => {
+     const FirstVisible2 = foods[0].Name
+     console.log("firstvisible Use effect", FirstVisible2)
+     console.log("firstvisible Use effect2", foods[0])
+     setFirstVisible(FirstVisible2)
+   }, [foods])
+   */
+
+
+  const handleNext = () => {
+
+
+    const getNext = async () => {
+      const next = query(foodsCollectionRefs,
+        orderBy("Name"),
+        startAfter(lastVisible),
+        limit(3));
+
+      const data = await getDocs(next);
+      const lastVisible2 = data.docs[data.docs.length - 1];
+      
+      setLastVisible(lastVisible2)
+     
+      setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+    }
+    getNext();
+    const FirstVisblenext = foods[0].Name
+    setFirstVisible(FirstVisblenext)
+    
+  }
+
+  const handleBack = () => {
+    const getBack = async () => {
+      const back = query(foodsCollectionRefs,
+        orderBy("Name"),
+        startAt(firstVisible),
+        limit(3));
+
+      const data = await getDocs(back);
+      const lastVisible2 = data.docs[data.docs.length - 1];
+      const firstVisible2 = data.docs[data.docs.length - 3]
+      setLastVisible(lastVisible2)
+      setFirstVisible(firstVisible2)
+      setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+    }
+    getBack();
+
+
+  }
+
+
+
+
+
+
 
   //-------------------------------------------------
 
@@ -214,7 +237,7 @@ const cargarDocumentos = () => {
     setShow(true);
   };
 
-  
+
 
   return (
     <>
@@ -349,6 +372,7 @@ const cargarDocumentos = () => {
                                 <a arial-label="Previous" className="page-link">
                                   <span aria-hidden="true" color="success">
                                     <button
+                                      onClick={handleBack}
                                       aria-hidden="true"
                                       className="fa fa-angle-double-left"
                                     ></button>
@@ -375,7 +399,7 @@ const cargarDocumentos = () => {
                                 <a arial-label="Next" className="page-link">
                                   <span aria-hidden="true">
                                     <button
-                                    
+                                      onClick={handleNext}
                                       aria-hidden="true"
                                       className="fa fa-angle-double-right"
                                     ></button>
@@ -409,21 +433,21 @@ const cargarDocumentos = () => {
                   </Modal>
 
                   <Modal
-                    isOpen = {showInfo}
+                    isOpen={showInfo}
                     style={{ maxWidth: "100%", width: "75%" }}
                   >
-                  
+
                     <ModalBody>
                       <InfoFood
                         defaultValue={openFood}
                         foodsCollectionRefs={foodsCollectionRefs}
                         handleCloseInfo={handleCloseInfo}
-                        foods = {foods}
+                        foods={foods}
                         setFoods={setFoods}
                         showInfo={showInfo}
                       />
                     </ModalBody>
-                    </Modal>
+                  </Modal>
                   {/* 
                   <div>
                     <InfoFood

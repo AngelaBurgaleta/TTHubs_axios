@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect, useContext } from "react";
+//ut23d8qxu4kyckpv
 import { Fragment } from "react";
 import AuthContext from "context/AuthProvider";
-import axios from './api/axios'
+import axios from 'axios'
 import { FoodTable } from "components/FoodTable";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
@@ -93,37 +94,62 @@ const Login = () => {
       const accessToken = response?.data?.access_token;
       //console.log(accessToken)
 
+      /* 
       try {
+        console.log("El token que mando al gateway: ", accessToken)
         const responseFirebase = await axios.post(
           GATEWAY_URL,
-          accessToken
+          "token" = accessToken,
         );
         const firebaseToken = responseFirebase?.data?.access_token
-        
-        console.log("access token firebase : " + JSON.stringify(firebaseToken))
-        
 
-       //auth with custom token firebase
-    signInWithCustomToken(auth, firebaseToken)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("user Logs :" + user)
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log("Error firebase: " + error)
-      // ...
-    });
+        console.log("access token firebase : " + JSON.stringify(firebaseToken))
+        console.log("data responseFirebase token", responseFirebase?.data)
+        console.log("dataresponseFirebase body", responseFirebase?.body)
+
+        //auth with custom token firebase
+        signInWithCustomToken(auth, firebaseToken)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log("user Logs :" + user)            
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("Error firebase: " + error)
+            console.log("wee", responseFirebase?.data)
+            // ...
+          });
 
 
       } catch (error) {
 
-        console.log('token no enviado: ' + error)
+        console.log('Error al mandar el access Token griego: ' + error)
+        //console.log("respuesta gateway", responseFirebase?.data)
+        console.log("errorrr", error?.response)
+        console.log()
 
-      }
+      }*/
+
+      console.log("url del post: ", JSON.stringify(`https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?${accessToken}`))
+      var config = {
+        method: 'post',
+        url: JSON.stringify(`https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?${accessToken}`),
+        headers: { }
+      };
+      
+      axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log("error response: ", error?.response)
+      });
+      
+
 
       //para guardarlo en el contexto global
       setAuth({ username, password, accessToken })
@@ -143,7 +169,7 @@ const Login = () => {
       errRef.current.focus();
     }
 
-    
+
   }
 
   return (

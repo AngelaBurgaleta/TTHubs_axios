@@ -32,11 +32,11 @@ const handleLogout = () => {
  window.localStorage.remove('loggedUserJSON')
 }
 
-
+//Pon solo Login cuando acabes la paginacion etc
 */
  return (
    <div>
-     <Login />
+     <FoodTable />
    </div>
  )
 }
