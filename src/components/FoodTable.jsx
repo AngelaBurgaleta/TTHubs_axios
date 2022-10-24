@@ -17,6 +17,9 @@ import {
   query,
   where,
   getDoc,
+  endAt,
+  reverse,
+
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import {
@@ -82,6 +85,26 @@ export function FoodTable() {
     setSearch(event.target.value);
   };
 
+  const [filter, setFilter] = useState([])
+
+  const handleSearchh = (event) => {
+    const searching = query(foodsCollectionRefs, orderBy("Name"), limit(3), startAt([event]), endAt([event + '\uf8ff']))
+
+    onSnapshot(searching, (snapshot) => {
+      const items = [];
+
+      snapshot.forEach((doc) => {
+        items.push({ ...doc.data(), id: doc.id });
+      });
+
+      setFilter(items);
+    });
+    console.log("handleSearchh ", filter)
+    //console.log("Current cities in CA: ", cities.join(", "));
+    //console.log("Current beverages in CA: ", cities);
+  };
+
+
   //PAGINACION
 
 
@@ -90,13 +113,16 @@ export function FoodTable() {
   const [firstVisible, setFirstVisible] = useState({});
   //Para que la vista se renderice a la tabla de foods
   useEffect(() => {
-    const first = query(foodsCollectionRefs, orderBy("Name"), limit(3));
+    const first = query(foodsCollectionRefs, orderBy("Name"), limit(12));
     const getFoods = async () => {
-      const data = await getDocs(first);
+      const data = await getDocs(first)
+
+
       const lastVisible = data.docs[data.docs.length - 1];
       const firstVisible = data.docs[0]
       setLastVisible(lastVisible)
       setFirstVisible(firstVisible)
+
 
 
       setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -107,20 +133,26 @@ export function FoodTable() {
     };
 
     getFoods();
-    
+
+
 
 
 
   }, []);
 
-  /*
+  /* 
    useEffect(() => {
-     const FirstVisible2 = foods[0].Name
-     console.log("firstvisible Use effect", FirstVisible2)
-     console.log("firstvisible Use effect2", foods[0])
-     setFirstVisible(FirstVisible2)
+     const FirstVisible = foods[0]
+     const LastVisible = foods[2]
+     
+     
+     setFirstVisible(FirstVisible)
+     setLastVisible(LastVisible)
+     //console.log("firstvisible Use effect array foods", firstVisible)
+     //console.log("lastvisible use effect array foods", lastVisible)
    }, [foods])
    */
+
 
 
   const handleNext = () => {
@@ -130,35 +162,37 @@ export function FoodTable() {
       const next = query(foodsCollectionRefs,
         orderBy("Name"),
         startAfter(lastVisible),
-        limit(3));
+        limit(12));
 
       const data = await getDocs(next);
       const lastVisible2 = data.docs[data.docs.length - 1];
-      
+      //const firstVisible2 = data.docs[0];
       setLastVisible(lastVisible2)
-     
+      //setFirstVisible(firstVisible2)
+
       setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 
     }
     getNext();
-    const FirstVisblenext = foods[0].Name
-    setFirstVisible(FirstVisblenext)
-    
+    //const FirstVisblenext = foods[0].Name
+    //setFirstVisible(FirstVisblenext)
+
   }
 
   const handleBack = () => {
     const getBack = async () => {
       const back = query(foodsCollectionRefs,
-        orderBy("Name"),
-        startAt(firstVisible),
-        limit(3));
+        orderBy("Name", "desc"),
+        startAfter(firstVisible),
+        limit(12)
+      );
 
       const data = await getDocs(back);
       const lastVisible2 = data.docs[data.docs.length - 1];
-      const firstVisible2 = data.docs[data.docs.length - 3]
+      //const firstVisible2 = data.docs[0]
       setLastVisible(lastVisible2)
-      setFirstVisible(firstVisible2)
-      setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      //setFirstVisible(firstVisible2)
+      setFoods(data.docs.reverse().map((doc) => ({ ...doc.data(), id: doc.id })));
 
     }
     getBack();
@@ -166,6 +200,26 @@ export function FoodTable() {
 
   }
 
+  const handleFirst = () => {
+    const getBack = async () => {
+      const back = query(foodsCollectionRefs,
+        orderBy("Name"),
+        startAt(firstVisible),
+        limit(12)
+      );
+
+      const data = await getDocs(back);
+      const lastVisible2 = data.docs[data.docs.length - 1];
+      //const firstVisible2 = data.docs[0]
+      setLastVisible(lastVisible2)
+      //setFirstVisible(firstVisible2)
+      setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+    }
+    getBack();
+
+
+  }
 
 
 
@@ -361,6 +415,34 @@ export function FoodTable() {
                         </tbody>
                       </Table>
                     </CardBody>
+                    {/* 
+                    <Card id="cards">
+                      <CardBody>
+                        <Table striped>
+                          <thead className="text-success">
+                            <tr>
+                              <th>Name</th>
+                              <th>Food Group</th>
+                              <th>Food Subgroup</th>
+                              <th>Country</th>
+                              <th>Energy(Kcal/100g)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filter.map((food) => (
+                              <tr key={food.id}>
+                                <th>{food.Name}</th>
+                                <th>{food.FoodGroup}</th>
+                                <th>{food.FoodSubgroup}</th>
+                                <th>{food.Country}</th>
+                                <th>{food.Energy}</th>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+                      </CardBody>
+                    </Card>
+                    */}
 
                     <CardFooter>
                       <nav className aral-label="pagination">
@@ -372,13 +454,14 @@ export function FoodTable() {
                                 <a arial-label="Previous" className="page-link">
                                   <span aria-hidden="true" color="success">
                                     <button
-                                      onClick={handleBack}
+                                      onClick={handleFirst}
                                       aria-hidden="true"
                                       className="fa fa-angle-double-left"
                                     ></button>
                                   </span>
                                 </a>
                               </li>
+                              {/* 
                               <li className="page-item">
                                 <a href="#pablo" className="page-link">
                                   1
@@ -394,6 +477,7 @@ export function FoodTable() {
                                   3
                                 </a>
                               </li>
+                              */}
 
                               <li className="page-item">
                                 <a arial-label="Next" className="page-link">
