@@ -92,6 +92,7 @@ const Login = () => {
       //console.log("response griego: " + JSON.stringify(response?.data))
       //console.log(JSON.stringify(response))
       const accessToken = response?.data?.access_token;
+      console.log(typeof(accessToken))
       //console.log(accessToken)
 
       /* 
@@ -133,16 +134,22 @@ const Login = () => {
 
       }*/
 
-      console.log("url del post: ", JSON.stringify(`https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?${accessToken}`))
+      console.log("url del post: ", JSON.stringify(`https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?token=${accessToken}`))
       var config = {
         method: 'post',
-        url: JSON.stringify(`https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?${accessToken}`),
+        url: `https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?token=${accessToken}`,
         headers: { }
       };
+
+
       
       axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        const firebaseToken = response?.data?.access_token
+
+        //auth with custom token firebase
+        //signInWithCustomToken(auth, firebaseToken)
       })
       .catch(function (error) {
         console.log(error);

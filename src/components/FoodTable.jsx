@@ -51,6 +51,7 @@ import { async } from "@firebase/util";
 
 
 export function FoodTable() {
+  console.log("Food Table started")
   //Declarar e inicializar lista de foods
   const [foods, setFoods] = useState([]);
 
@@ -115,6 +116,7 @@ export function FoodTable() {
   useEffect(() => {
     const first = query(foodsCollectionRefs, orderBy("Name"), limit(12));
     const getFoods = async () => {
+      console.log("getFoods")
       const data = await getDocs(first)
 
 

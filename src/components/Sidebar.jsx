@@ -27,8 +27,8 @@ export function Sidebar(props) {
     >
       <div className="logo">
         <div className="simple-text logo-normal">
-         TTHubs
-          {/* <img src={logoTT} alt="react-logo" />*/}
+
+          <img src={logoTT} alt="react-logo" />
         </div>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>

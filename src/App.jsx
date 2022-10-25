@@ -36,7 +36,7 @@ const handleLogout = () => {
 */
  return (
    <div>
-     <FoodTable />
+     <Login />
    </div>
  )
 }
