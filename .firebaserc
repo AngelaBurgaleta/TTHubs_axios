@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "fir-ejemplo-76559"
-  }
+    "default": "upm-lifestech",
+    "upm-lifestech": "upm-lifestech"
+  },
+  "targets": {},
+  "etags": {}
 }

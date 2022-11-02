@@ -384,7 +384,7 @@ export function FoodTable() {
                             })
 
                             .map((food) => (
-                              <tr key={food.id}>
+                              <tr key={food.id} onClick={() => openInfoModal(food)}>
                                 <th>{food.Name}</th>
                                 <th>{food.FoodGroup}</th>
                                 <th>{food.FoodSubgroup}</th>
@@ -393,20 +393,21 @@ export function FoodTable() {
 
                                 <div className="card-body">
                                   <Button
-                                    className="btn-icon btn-link edit btn btn-danger btn-sm"
+                                    className="btn-icon btn-link edit btn btn-danger btn-md"
                                     onClick={() => deleteFood(food)}
                                   >
                                     <i className="fa fa-times"></i>
                                   </Button>
 
                                   <Button
-                                    className="btn-icon btn-link edit btn btn-info btn-sm"
+                                    className="btn-icon btn-link edit btn btn-info btn-md"
                                     onClick={() => openUpdateModal(food)}
                                   >
                                     <i className="fa fa-edit"></i>
                                   </Button>
+
                                   <Button
-                                    className="btn-icon btn-link edit btn btn btn-sm"
+                                    className="btn-icon btn-link edit btn btn btn-md"
                                     onClick={() => openInfoModal(food)}
                                   >
                                     <i className="nc-icon nc-alert-circle-i"></i>

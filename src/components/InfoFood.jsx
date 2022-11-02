@@ -88,21 +88,46 @@ export default function InfoFood({
 
   return (
     <CardBody>
-      <h2 style={{ color: azuloscuro, fontSize: 20, marginLeft: "1em" }}>
+      <CardTitle>
         <div className="row">
-          <img src={logoTTinfo} alt="TTHubs MED FOOD" height="80" />
+          <div className="col-sm-5 col-lg-2">
+            
 
-          <h4
-            style={{
-              fontWeight: "bold",
-              marginTop: "0.3em",
-              marginLeft: "1.2em ",
-            }}
-          >
-            {defaultValue.Name}
-          </h4>
+
+              <img src={logoTTinfo} alt="TTHubs MED FOOD" height="80" />
+            
+          </div>
+
+          <div className="col-sm-6 col-lg-6">
+          <h2 style={{ color: azuloscuro, fontSize: 20, marginRight: "50px"}}>
+            <h4
+              style={{
+                fontWeight: "bold",
+                marginTop: "0.3em",
+                marginLeft: "1.2em ",
+              }}
+            >
+              {defaultValue.Name}
+            </h4>
+            </h2>
+          </div>
+
+
+          <div className="col-auto"  style={{ marginLeft: "150px"}}>
+            <Button
+              className="btn-xs"
+              outline
+              style={{ fontSize: 0.2, height: "1px", marginTop: "27px"}}
+
+              color="danger"
+              onClick={handleCloseInfo}
+            >
+              <label style={{ fontSize: 10 }}>X</label>
+            </Button>
+          </div>
+
         </div>
-      </h2>
+      </CardTitle>
       <hr size="8px" color="#196694" />
 
       <CardBody>
@@ -514,7 +539,7 @@ export default function InfoFood({
                   !defaultValue.FoodSubgroup.toLowerCase().includes(
                     "vegetables dried"
                   ) &&
-                  !defaultValue.FoodSubgroup.toLowerCase().includes("wheat")&&
+                  !defaultValue.FoodSubgroup.toLowerCase().includes("wheat") &&
                   !defaultValue.FoodGroup.toLowerCase().includes("fish") &&
                   !defaultValue.FoodSubgroup.toLowerCase().includes("potato") &&
                   !defaultValue.FoodSubgroup.toLowerCase().includes(
@@ -559,16 +584,16 @@ export default function InfoFood({
                   !defaultValue.FoodSubgroup.toLowerCase().includes(
                     "soups"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={notresultsgreen} height="60" />
-                      <figcaption style={{ fontSize: 12 }}>
-                        NOT RESULTS
-                      </figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={notresultsgreen} height="60" />
+                        <figcaption style={{ fontSize: 12 }}>
+                          NOT RESULTS
+                        </figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodGroup.toLowerCase().includes("sorgum") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("cereals") ||
@@ -577,14 +602,14 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes("soups") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("bread") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("pies")) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={glutengreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>GLUTEN</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={glutengreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>GLUTEN</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes("offal") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes(
@@ -596,39 +621,39 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "seafood"
                   )) && (
-                  <div
-                    style={{
-                      display: "inline",
+                    <div
+                      style={{
+                        display: "inline",
 
-                      marginRight: "10%",
-                    }}
-                  >
-                    <figure>
-                      {" "}
-                      <img
-                        src={crustaceansgreen}
-                        title="crustaceos"
-                        height="60"
-                      />
-                      <figcaption style={{ fontSize: 13 }}>
-                        CRUSTACEANS
-                      </figcaption>
-                    </figure>
-                  </div>
-                )}
+                        marginRight: "10%",
+                      }}
+                    >
+                      <figure>
+                        {" "}
+                        <img
+                          src={crustaceansgreen}
+                          title="crustaceos"
+                          height="60"
+                        />
+                        <figcaption style={{ fontSize: 13 }}>
+                          CRUSTACEANS
+                        </figcaption>
+                      </figure>
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes("nuts") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "seeds"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={sesamegreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>SESAME</figcaption>
-                    </figure>
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={sesamegreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>SESAME</figcaption>
+                      </figure>
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes(
                   "freshwater"
@@ -638,33 +663,33 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "shellfish"
                   )) && (
-                  <div
-                    style={{
-                      display: "inline",
-                      marginRight: "10%",
-                      maxWidth: "200% !important",
-                    }}
-                  >
-                    <figure style={{ maxWidth: "200% !important" }}>
-                      <img
-                        src={fishgreen}
-                        height="60"
-                        max-width="200% !important"
-                      />
-                      <figcaption style={{ fontSize: 13 }}>FISH</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div
+                      style={{
+                        display: "inline",
+                        marginRight: "10%",
+                        maxWidth: "200% !important",
+                      }}
+                    >
+                      <figure style={{ maxWidth: "200% !important" }}>
+                        <img
+                          src={fishgreen}
+                          height="60"
+                          max-width="200% !important"
+                        />
+                        <figcaption style={{ fontSize: 13 }}>FISH</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes("egg") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("eggs")) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      <img src={egggreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>EGGS</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        <img src={egggreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>EGGS</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes("cereals") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("nuts") ||
@@ -674,13 +699,13 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes("pasta") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("pies") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("rice")) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      <img src={lupingreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>LUPIN</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        <img src={lupingreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>LUPIN</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes("nuts") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("seeds") ||
@@ -694,18 +719,18 @@ export default function InfoFood({
                     "chocolate"
                   ) ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("nut")) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img
-                        src={peanutsgreen}
-                        height="60"
-                        style={{ maxWidth: "200% !important" }}
-                      />
-                      <figcaption style={{ fontSize: 13 }}>PEANUTS</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img
+                          src={peanutsgreen}
+                          height="60"
+                          style={{ maxWidth: "200% !important" }}
+                        />
+                        <figcaption style={{ fontSize: 13 }}>PEANUTS</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes(
                   "dairy imitate based sweets"
@@ -717,14 +742,14 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes("pasta") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("pies") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("rice")) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={milkgreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>MILK</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={milkgreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>MILK</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodGroup.toLowerCase().includes("cereals") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("soybean") ||
@@ -738,14 +763,14 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "noodles"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={soybeangreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>SOYBEAN</figcaption>
-                    </figure>
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={soybeangreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>SOYBEAN</figcaption>
+                      </figure>
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes(
                   "dairy imitate based sweets"
@@ -757,13 +782,13 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "vegetables dried"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      <img src={celerygreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>CELERY</figcaption>
-                    </figure>
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        <img src={celerygreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>CELERY</figcaption>
+                      </figure>
+                    </div>
+                  )}
 
                 {(defaultValue.FoodGroup.toLowerCase().includes("nuts") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("seeds") ||
@@ -773,14 +798,14 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "vegetable oils"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={mustardgreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>MUSTARD</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={mustardgreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>MUSTARD</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes("wheat") ||
                   defaultValue.FoodGroup.toLowerCase().includes("fish") ||
@@ -819,14 +844,14 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "soups"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={sulphitegreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>SULPHITE</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={sulphitegreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>SULPHITE</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodGroup.toLowerCase().includes("cereals") ||
                   defaultValue.FoodSubgroup.toLowerCase().includes("soybean") ||
@@ -842,24 +867,24 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "pasta"
                   )) && (
-                  <div
-                    style={{
-                      display: "inline",
-                      marginRight: "10%",
-                      maxWidth: "200% !important",
-                    }}
-                  >
-                    <figure>
-                      {" "}
-                      <img
-                        src={nutsgreen}
-                        height="60"
-                        style={{ maxWidth: "200" }}
-                      />
-                      <figcaption style={{ fontSize: 13 }}>NUTS</figcaption>
-                    </figure>{" "}
-                  </div>
-                )}
+                    <div
+                      style={{
+                        display: "inline",
+                        marginRight: "10%",
+                        maxWidth: "200% !important",
+                      }}
+                    >
+                      <figure>
+                        {" "}
+                        <img
+                          src={nutsgreen}
+                          height="60"
+                          style={{ maxWidth: "200" }}
+                        />
+                        <figcaption style={{ fontSize: 13 }}>NUTS</figcaption>
+                      </figure>{" "}
+                    </div>
+                  )}
 
                 {(defaultValue.FoodSubgroup.toLowerCase().includes(
                   "shellfish"
@@ -868,14 +893,14 @@ export default function InfoFood({
                   defaultValue.FoodSubgroup.toLowerCase().includes(
                     "offal"
                   )) && (
-                  <div style={{ display: "inline", marginRight: "10%" }}>
-                    <figure>
-                      {" "}
-                      <img src={molluscgreen} height="60" />
-                      <figcaption style={{ fontSize: 13 }}>MOLLUSC</figcaption>
-                    </figure>
-                  </div>
-                )}
+                    <div style={{ display: "inline", marginRight: "10%" }}>
+                      <figure>
+                        {" "}
+                        <img src={molluscgreen} height="60" />
+                        <figcaption style={{ fontSize: 13 }}>MOLLUSC</figcaption>
+                      </figure>
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -885,8 +910,8 @@ export default function InfoFood({
         <h6 style={{ color: azuloscuro, fontWeight: "bold", marginLeft: "16px" }}>
           NUTRITIONAL CLAIMS
         </h6>
-        <hr align="left" color="#196694" style={{marginLeft: "16px"}}></hr>
-        <div className="row" style={{marginLeft: "16px"}}>
+        <hr align="left" color="#196694" style={{ marginLeft: "16px" }}></hr>
+        <div className="row" style={{ marginLeft: "16px" }}>
           <div
             className="flex-container"
             style={{
@@ -897,7 +922,7 @@ export default function InfoFood({
               alignItems: "baseline",
               justifyContent: "flex-start",
               gap: "1px 20px"
-             
+
 
             }}
           >
@@ -1167,16 +1192,8 @@ export default function InfoFood({
         </div>
       </CardBody>
       <ModalFooter>
-        <Button
-          className="btn"
-          style={{ fontSize: 8 }}
-          outline
-          color="danger"
-          onClick={handleCloseInfo}
-        >
-          <label style={{ fontSize: 20 }}>X</label>
-        </Button>
+       
       </ModalFooter>
-    </CardBody>
+    </CardBody >
   );
 }

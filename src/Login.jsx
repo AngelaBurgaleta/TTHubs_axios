@@ -29,6 +29,8 @@ import {
   ModalHeader,
   Navbar,
 } from "reactstrap";
+import logologin from "./logo_login.png"
+import logoTTinfo from "./components/logoTT_info.png";
 //import './login.css'
 //import axios from "./components/api/axios";
 
@@ -92,7 +94,7 @@ const Login = () => {
       //console.log("response griego: " + JSON.stringify(response?.data))
       //console.log(JSON.stringify(response))
       const accessToken = response?.data?.access_token;
-      console.log(typeof(accessToken))
+      console.log(typeof (accessToken))
       //console.log(accessToken)
 
       /* 
@@ -138,24 +140,24 @@ const Login = () => {
       var config = {
         method: 'post',
         url: `https://e-module-gateway-ssxt0x6.ew.gateway.dev/checkJWT?token=${accessToken}`,
-        headers: { }
+        headers: {}
       };
 
 
-      
-      axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        const firebaseToken = response?.data?.access_token
 
-        //auth with custom token firebase
-        //signInWithCustomToken(auth, firebaseToken)
-      })
-      .catch(function (error) {
-        console.log(error);
-        console.log("error response: ", error?.response)
-      });
-      
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+          const firebaseToken = response?.data?.access_token
+
+          //auth with custom token firebase
+          //signInWithCustomToken(auth, firebaseToken)
+        })
+        .catch(function (error) {
+          console.log(error);
+          console.log("error response: ", error?.response)
+        });
+
 
 
       //para guardarlo en el contexto global
@@ -182,36 +184,33 @@ const Login = () => {
   return (
 
     <Fragment>
-      <Card style={{ marginLeft: '50px', marginRight: '50px', marginTop: '200px', height: '800px' }} >
 
-        <div>
-          {success ? (
 
-            <Fragment>
-              <Router>
-                <div>
-                  <Sidebar />
-                  <div className="content w-100">
-                    <Switch>
-
-                      <Route path="/foodtable" component={() => <FoodTable />} />
-                      <Route path="*" component={() => <FoodTable />} />
-                    </Switch>
-                  </div>
+      <div>
+        {success ? (
+          <Fragment>
+            <Router>
+              <div>
+                <Sidebar />
+                <div className="content w-100">
+                  <Switch>
+                    <Route path="/foodtable" component={() => <FoodTable />} />
+                    <Route path="*" component={() => <FoodTable />} />
+                  </Switch>
                 </div>
-              </Router>
-            </Fragment>
-
-          ) : (
-            <section>
-              <p
-                ref={errRef}
-                className={errMsg ? "errmsg" : "offscreen"}
-                aria-live="assertive"
-              >
-                {errMsg}{" "}
-              </p>
-
+              </div>
+            </Router>
+          </Fragment>
+        ) : (
+          <section>
+            <p
+              ref={errRef}
+              className={errMsg ? "errmsg" : "offscreen"}
+              aria-live="assertive"
+            >
+              {errMsg}{" "}
+            </p>
+            <Card style={{ marginLeft: '50px', marginRight: '50px', marginTop: '200px', height: '800px' }} >
               <CardHeader className="flex-container"
                 style={{
                   height: "100px",
@@ -227,11 +226,40 @@ const Login = () => {
                     height: "100px",
                     display: "flex",
 
-                  }}>TTHubs Nutritional Module</h1>
+                  }}><div className="flex-item" style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: 'wrap',
+                    justifyContent: "center",
+                    columnGap: '50px'
+
+                  }}>
+
+                    <img style={{ height: "100px" }} src={logoTTinfo} alt="react-logo" />
+                  </div></h1>
               </CardHeader>
+
+
+
               <CardBody>
+
+
+
+
                 <Form onSubmit={handleSubmit} >
+
+
                   <div className="flex-container" >
+                    <div className="flex-item" style={{
+
+                      display: "flex",
+                      flexDirection: "row",
+                      flexWrap: 'wrap',
+                      justifyContent: "center",
+                      columnGap: '50px'
+
+                    }}><p>Nutritional Module</p></div>
+
                     <div className="flex-item" style={{
 
                       display: "flex",
@@ -243,7 +271,7 @@ const Login = () => {
                     }}>
 
                       <div className="form-group">
-                        <label htmlFor="username" style={{ fontSize: "25px" }}>Username: </label>{" "}
+                        <label htmlFor="username" style={{ fontSize: "15px" }}>Username </label>{" "}
                         <input
                           type="text"
                           id="username"
@@ -265,7 +293,7 @@ const Login = () => {
                     }} >
 
                       <div className="form-group">
-                        <label htmlFor="password" style={{ fontSize: "25px" }}>Password: </label>{" "}
+                        <label htmlFor="password" style={{ fontSize: "15px" }}>Password </label>{" "}
                         <input
                           type="password"
                           id="password"
@@ -288,11 +316,11 @@ const Login = () => {
                   </div>
                 </Form>
               </CardBody>
+            </Card>
+          </section>
+        )}
+      </div>
 
-            </section>
-          )}
-        </div>
-      </Card>
     </Fragment>
 
   )

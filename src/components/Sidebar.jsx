@@ -26,9 +26,14 @@ export function Sidebar(props) {
       data-active-color={props.activeColor}
     >
       <div className="logo">
-        <div className="simple-text logo-normal">
+        <div className="simple-text logo-normal" style={{
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%'
+        }}>
 
-          <img src={logoTT} alt="react-logo" />
+          <img style={{ height: "100px", marginLeft: "50px" }} src={logoTT} alt="react-logo" />
         </div>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
