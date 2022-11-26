@@ -5,77 +5,60 @@ import {
   doc,
   collection,
   getDocs,
-  addDoc,
-  setDoc,
-  updateDoc,
   deleteDoc,
   orderBy,
-  onSnapshot,
   startAt,
   limit,
   startAfter,
   query,
-  where,
-  getDoc,
   endAt,
-  reverse,
-
+  endBefore,
+  limitToLast,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import {
   Card,
-  CardHeader,
-  CardBody,
   CardFooter,
-  CardTitle,
   Table,
   Row,
   Col,
-  Form,
   Input,
   InputGroup,
   InputGroupText,
   InputGroupAddon,
-  Collapse,
   Button,
   Modal,
   ModalBody,
-  ModalFooter,
   ModalHeader,
   Navbar,
+  CardBody,
 } from "reactstrap";
 import MyForm from "./MyForm";
-import Query from "./Query";
 import InfoFood from "./InfoFood";
-import { async } from "@firebase/util";
-
 
 export function FoodTable() {
-  console.log("Food Table started")
+  console.log("Food Table started");
   //Declarar e inicializar lista de foods
   const [foods, setFoods] = useState([]);
 
   //Referencia a la db
   const foodsCollectionRefs = collection(db, "data");
 
+  // Definir limite
+  const limitDocs = 12;
+
+  // Definir el campo
+  const [field] = useState("Name");
 
   //ORDENAR ALFABÉTICAMENTE
-  const [order, setOrder] = useState("ASC");
+  const [order, setOrder] = useState("asc");
 
-  const sorting = (col) => {
-    if (order === "ASC") {
-      const sorted = [...foods].sort((a, b) =>
-        a[col]?.toLowerCase() > b[col]?.toLowerCase() ? 1 : -1
-      );
-      setFoods(sorted);
-      setOrder("DSC");
-    }
-    if (order === "DSC") {
-      const sorted = [...foods].sort((a, b) =>
-        a[col]?.toLowerCase() < b[col]?.toLowerCase() ? 1 : -1
-      );
-      setFoods(sorted);
-      setOrder("ASC");
+  const handleSort = (newOrder) => {
+    if (newOrder === "asc") {
+      setOrder("desc");
+    } else {
+      setOrder("asc");
     }
   };
 
@@ -86,147 +69,68 @@ export function FoodTable() {
     setSearch(event.target.value);
   };
 
-  const [filter, setFilter] = useState([])
+  //PAGINACION
+  const [lastVisible, setLastVisible] = useState(null);
+  const [firstVisible, setFirstVisible] = useState(null);
 
-  const handleSearchh = (event) => {
-    const searching = query(foodsCollectionRefs, orderBy("Name"), limit(3), startAt([event]), endAt([event + '\uf8ff']))
-
-    onSnapshot(searching, (snapshot) => {
-      const items = [];
-
-      snapshot.forEach((doc) => {
-        items.push({ ...doc.data(), id: doc.id });
-      });
-
-      setFilter(items);
-    });
-    console.log("handleSearchh ", filter)
-    //console.log("Current cities in CA: ", cities.join(", "));
-    //console.log("Current beverages in CA: ", cities);
+  const setAnchors = (docs) => {
+    console.log("setAnchors");
+    setLastVisible(docs[docs.length - 1]);
+    setFirstVisible(docs[0]);
   };
 
-
-  //PAGINACION
-
-
-
-  const [lastVisible, setLastVisible] = useState({});
-  const [firstVisible, setFirstVisible] = useState({});
   //Para que la vista se renderice a la tabla de foods
   useEffect(() => {
-    const first = query(foodsCollectionRefs, orderBy("Name"), limit(12));
+    const first = query(
+      foodsCollectionRefs,
+      where("Name", ">=", search),
+      where("Name", "<=", search + "\uf8ff"),
+      orderBy(field, order),
+      limit(limitDocs)
+    );
     const getFoods = async () => {
-      console.log("getFoods")
-      const data = await getDocs(first)
-
-
-      const lastVisible = data.docs[data.docs.length - 1];
-      const firstVisible = data.docs[0]
-      setLastVisible(lastVisible)
-      setFirstVisible(firstVisible)
-
-
+      console.log("getFoods");
+      const data = await getDocs(first);
+      setAnchors(data.docs);
 
       setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       console.log(
         setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       );
-
     };
 
     getFoods();
+  }, [search]);
 
+  const handleNext = async () => {
+    const next = query(
+      foodsCollectionRefs,
+      where("Name", ">=", search),
+      where("Name", "<=", search + "\uf8ff"),
+      orderBy(field, order),
+      startAfter(lastVisible),
+      limit(limitDocs)
+    );
 
+    const data = await getDocs(next);
+    setAnchors(data.docs);
+    setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
 
+  const handleBack = async () => {
+    const back = query(
+      foodsCollectionRefs,
+      where("Name", ">=", search),
+      where("Name", "<=", search + "\uf8ff"),
+      orderBy(field, order),
+      endAt(firstVisible),
+      limitToLast(limitDocs)
+    );
 
-
-  }, []);
-
-  /* 
-   useEffect(() => {
-     const FirstVisible = foods[0]
-     const LastVisible = foods[2]
-     
-     
-     setFirstVisible(FirstVisible)
-     setLastVisible(LastVisible)
-     //console.log("firstvisible Use effect array foods", firstVisible)
-     //console.log("lastvisible use effect array foods", lastVisible)
-   }, [foods])
-   */
-
-
-
-  const handleNext = () => {
-
-
-    const getNext = async () => {
-      const next = query(foodsCollectionRefs,
-        orderBy("Name"),
-        startAfter(lastVisible),
-        limit(12));
-
-      const data = await getDocs(next);
-      const lastVisible2 = data.docs[data.docs.length - 1];
-      //const firstVisible2 = data.docs[0];
-      setLastVisible(lastVisible2)
-      //setFirstVisible(firstVisible2)
-
-      setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-
-    }
-    getNext();
-    //const FirstVisblenext = foods[0].Name
-    //setFirstVisible(FirstVisblenext)
-
-  }
-
-  const handleBack = () => {
-    const getBack = async () => {
-      const back = query(foodsCollectionRefs,
-        orderBy("Name", "desc"),
-        startAfter(firstVisible),
-        limit(12)
-      );
-
-      const data = await getDocs(back);
-      const lastVisible2 = data.docs[data.docs.length - 1];
-      //const firstVisible2 = data.docs[0]
-      setLastVisible(lastVisible2)
-      //setFirstVisible(firstVisible2)
-      setFoods(data.docs.reverse().map((doc) => ({ ...doc.data(), id: doc.id })));
-
-    }
-    getBack();
-
-
-  }
-
-  const handleFirst = () => {
-    const getBack = async () => {
-      const back = query(foodsCollectionRefs,
-        orderBy("Name"),
-        startAt(firstVisible),
-        limit(12)
-      );
-
-      const data = await getDocs(back);
-      const lastVisible2 = data.docs[data.docs.length - 1];
-      //const firstVisible2 = data.docs[0]
-      setLastVisible(lastVisible2)
-      //setFirstVisible(firstVisible2)
-      setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-
-    }
-    getBack();
-
-
-  }
-
-
-
-
-
+    const data = await getDocs(back);
+    setAnchors(data.docs);
+    setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
 
   //-------------------------------------------------
 
@@ -273,7 +177,7 @@ export function FoodTable() {
   };
 
   const handleCloseInfo = () => {
-    setShowInfo(false)
+    setShowInfo(false);
   };
   //---------------------
 
@@ -292,8 +196,6 @@ export function FoodTable() {
     event.preventDefault();
     setShow(true);
   };
-
-
 
   return (
     <>
@@ -353,14 +255,14 @@ export function FoodTable() {
                             <th
                               className="rt-th rt-resizable-header -cursor-pointer -sort-asc"
                               title="Toggle SortBy"
-                              onClick={() => sorting("Name")}
+                              onClick={handleSort}
                             >
-                              <div
+                              <span
                                 className="rt-resizable-header-content::after"
-                                caret
+                                caret="true"
                               >
                                 Name
-                              </div>
+                              </span>
                             </th>
 
                             <th>Food Group</th>
@@ -370,50 +272,37 @@ export function FoodTable() {
                           </tr>
                         </thead>
                         <tbody>
-                          {foods
-                            .filter((val) => {
-                              if (search === "") {
-                                return val;
-                              } else if (
-                                val.Name?.toLowerCase().includes(
-                                  search.toLowerCase()
-                                )
-                              ) {
-                                return val;
-                              }
-                            })
+                          {foods.map((food) => (
+                            <tr key={food.id}>
+                              <th>{food.Name}</th>
+                              <th>{food.FoodGroup}</th>
+                              <th>{food.FoodSubgroup}</th>
+                              <th>{food.Country}</th>
+                              <th>{food.Energy}</th>
 
-                            .map((food) => (
-                              <tr key={food.id}>
-                                <th>{food.Name}</th>
-                                <th>{food.FoodGroup}</th>
-                                <th>{food.FoodSubgroup}</th>
-                                <th>{food.Country}</th>
-                                <th>{food.Energy}</th>
+                              <th className="card-body">
+                                <Button
+                                  className="btn-icon btn-link edit btn btn-danger btn-sm"
+                                  onClick={() => deleteFood(food)}
+                                >
+                                  <i className="fa fa-times"></i>
+                                </Button>
 
-                                <div className="card-body">
-                                  <Button
-                                    className="btn-icon btn-link edit btn btn-danger btn-sm"
-                                    onClick={() => deleteFood(food)}
-                                  >
-                                    <i className="fa fa-times"></i>
-                                  </Button>
-
-                                  <Button
-                                    className="btn-icon btn-link edit btn btn-info btn-sm"
-                                    onClick={() => openUpdateModal(food)}
-                                  >
-                                    <i className="fa fa-edit"></i>
-                                  </Button>
-                                  <Button
-                                    className="btn-icon btn-link edit btn btn btn-sm"
-                                    onClick={() => openInfoModal(food)}
-                                  >
-                                    <i className="nc-icon nc-alert-circle-i"></i>
-                                  </Button>
-                                </div>
-                              </tr>
-                            ))}
+                                <Button
+                                  className="btn-icon btn-link edit btn btn-info btn-sm"
+                                  onClick={() => openUpdateModal(food)}
+                                >
+                                  <i className="fa fa-edit"></i>
+                                </Button>
+                                <Button
+                                  className="btn-icon btn-link edit btn btn btn-sm"
+                                  onClick={() => openInfoModal(food)}
+                                >
+                                  <i className="nc-icon nc-alert-circle-i"></i>
+                                </Button>
+                              </th>
+                            </tr>
+                          ))}
                         </tbody>
                       </Table>
                     </CardBody>
@@ -456,7 +345,7 @@ export function FoodTable() {
                                 <a arial-label="Previous" className="page-link">
                                   <span aria-hidden="true" color="success">
                                     <button
-                                      onClick={handleFirst}
+                                      onClick={handleBack}
                                       aria-hidden="true"
                                       className="fa fa-angle-double-left"
                                     ></button>
@@ -522,7 +411,6 @@ export function FoodTable() {
                     isOpen={showInfo}
                     style={{ maxWidth: "100%", width: "75%" }}
                   >
-
                     <ModalBody>
                       <InfoFood
                         defaultValue={openFood}
