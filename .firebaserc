@@ -1,8 +1,16 @@
 {
   "projects": {
-    "default": "upm-lifestech",
-    "upm-lifestech": "upm-lifestech"
+    "tt-hubs": "upm-lifestech",
+    "default": "upm-lifestech"
   },
-  "targets": {},
+  "targets": {
+    "upm-lifestech": {
+      "hosting": {
+        "tt-hubs": [
+          "upm-lifestech"
+        ]
+      }
+    }
+  },
   "etags": {}
 }
