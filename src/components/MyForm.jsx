@@ -20,13 +20,18 @@ import {
   doc,
   collection,
   getDocs,
-  addDoc,
-  setDoc,
-  updateDoc,
   deleteDoc,
   orderBy,
-  onSnapshot,
+  startAt,
+  limit,
+  startAfter,
   query,
+  endAt,
+  endBefore,
+  limitToLast,
+  where,
+  updateDoc,
+  addDoc
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import {
@@ -61,10 +66,14 @@ export default function MyForm({
   handleClose,
   setFoods,
   showInfo,
+  order,
+  limitDocs,
+  setAnchors,
+  field,
 }) {
-  
+
   //console.log(country);
-  
+
 
   const {
     control,
@@ -135,7 +144,7 @@ export default function MyForm({
 
     datos.LowSaturatedFat =
       Number(saturatedFattyAcidsValue) < 1.5 &&
-      Number(saturatedFattyAcidsValue) > 0.1
+        Number(saturatedFattyAcidsValue) > 0.1
         ? true
         : false;
     datos.SaturatedFatFree =
@@ -163,7 +172,7 @@ export default function MyForm({
 
     datos.SourceProtein =
       Number(totalProteinValue) <= 0.2 * Number(energyValue) &&
-      Number(totalProteinValue) > 0.12 * Number(energyValue)
+        Number(totalProteinValue) > 0.12 * Number(energyValue)
         ? true
         : false;
     datos.HighProtein =
@@ -193,11 +202,11 @@ export default function MyForm({
     //NUTRITIONAL CLAIMS PAGINA 4
 
     datos.SourceA =
-      (Number(aValue) + Number(carotenesValue)) > 0.15 * aRDA && (Number(aValue) + Number(carotenesValue))  <= 0.3 * aRDA
+      (Number(aValue) + Number(carotenesValue)) > 0.15 * aRDA && (Number(aValue) + Number(carotenesValue)) <= 0.3 * aRDA
         ? true
         : false;
 
-    datos.HighA = (Number(aValue) + Number(carotenesValue))  > 0.3 * aRDA ? true : false;
+    datos.HighA = (Number(aValue) + Number(carotenesValue)) > 0.3 * aRDA ? true : false;
 
     if (datos.D) {
       datos.SourceD =
@@ -238,7 +247,7 @@ export default function MyForm({
     if (datos.B2) {
       datos.SourceRiboflavin =
         Number(riboflavinValue) > 0.15 * riboflavinRDA &&
-        Number(riboflavinValue) <= 0.3 * riboflavinRDA
+          Number(riboflavinValue) <= 0.3 * riboflavinRDA
           ? true
           : false;
 
@@ -249,7 +258,7 @@ export default function MyForm({
     if (datos.B3) {
       datos.SourceNiacin =
         Number(niacinValue) > 0.15 * niacinRDA &&
-        Number(niacinValue) <= 0.3 * niacinRDA
+          Number(niacinValue) <= 0.3 * niacinRDA
           ? true
           : false;
 
@@ -268,7 +277,7 @@ export default function MyForm({
     if (datos.B9) {
       datos.SourceFolicAcid =
         Number(folicAcidValue) > 0.15 * folicAcidRDA &&
-        Number(folicAcidValue) <= 0.3 * folicAcidRDA
+          Number(folicAcidValue) <= 0.3 * folicAcidRDA
           ? true
           : false;
 
@@ -288,7 +297,7 @@ export default function MyForm({
     if (datos.B8) {
       datos.SourceBiotin =
         Number(biotinValue) > 0.15 * biotinRDA &&
-        Number(biotinValue) <= 0.3 * biotinRDA
+          Number(biotinValue) <= 0.3 * biotinRDA
           ? true
           : false;
 
@@ -298,7 +307,7 @@ export default function MyForm({
     if (datos.B5) {
       datos.SourceB5 =
         Number(pantothenicAcidValue) > 0.15 * pantothenicAcidRDA &&
-        Number(pantothenicAcidValue) <= 0.3 * pantothenicAcidRDA
+          Number(pantothenicAcidValue) <= 0.3 * pantothenicAcidRDA
           ? true
           : false;
 
@@ -309,7 +318,7 @@ export default function MyForm({
     if (datos.B1) {
       datos.SourceThiamin =
         Number(thiaminValue) > 0.15 * thiaminRDA &&
-        Number(thiaminValue) <= 0.3 * thiaminRDA
+          Number(thiaminValue) <= 0.3 * thiaminRDA
           ? true
           : false;
 
@@ -320,7 +329,7 @@ export default function MyForm({
     if (datos.Potassium) {
       datos.SourcePotassium =
         Number(potassiumValue) > 0.15 * potassiumRDA &&
-        Number(potassiumValue) <= 0.3 * potassiumRDA
+          Number(potassiumValue) <= 0.3 * potassiumRDA
           ? true
           : false;
 
@@ -331,7 +340,7 @@ export default function MyForm({
     if (datos.Calcium) {
       datos.SourceCalcium =
         Number(calciumValue) > 0.15 * calciumRDA &&
-        Number(calciumValue) <= 0.3 * calciumRDA
+          Number(calciumValue) <= 0.3 * calciumRDA
           ? true
           : false;
 
@@ -342,7 +351,7 @@ export default function MyForm({
     if (datos.Phosphorus) {
       datos.SourcePhosphorus =
         Number(phosphorusValue) > 0.15 * phosphorusRDA &&
-        Number(phosphorusValue) <= 0.3 * phosphorusRDA
+          Number(phosphorusValue) <= 0.3 * phosphorusRDA
           ? true
           : false;
 
@@ -353,7 +362,7 @@ export default function MyForm({
     if (datos.Magnesium) {
       datos.SourceMagnesium =
         Number(magnesiumValue) > 0.15 * magnesiumRDA &&
-        Number(magnesiumValue) <= 0.3 * magnesiumRDA
+          Number(magnesiumValue) <= 0.3 * magnesiumRDA
           ? true
           : false;
 
@@ -382,7 +391,7 @@ export default function MyForm({
     if (datos.Copper) {
       datos.SourceCopper =
         Number(copperValue) > 0.15 * copperRDA &&
-        Number(copperValue) <= 0.3 * copperRDA
+          Number(copperValue) <= 0.3 * copperRDA
           ? true
           : false;
 
@@ -392,7 +401,7 @@ export default function MyForm({
     if (datos.Manganese) {
       datos.SourceManganese =
         Number(manganeseValue) > 0.15 * manganeseRDA &&
-        Number(manganeseValue) <= 0.3 * manganeseRDA
+          Number(manganeseValue) <= 0.3 * manganeseRDA
           ? true
           : false;
 
@@ -403,7 +412,7 @@ export default function MyForm({
     if (datos.Fluorine) {
       datos.SourceFluorine =
         Number(fluorineValue) > 0.15 * fluorineRDA &&
-        Number(fluorineValue) <= 0.3 * fluorineRDA
+          Number(fluorineValue) <= 0.3 * fluorineRDA
           ? true
           : false;
 
@@ -414,7 +423,7 @@ export default function MyForm({
     if (datos.Selenium) {
       datos.SourceSelenium =
         Number(seleniumValue) > 0.15 * seleniumRDA &&
-        Number(seleniumValue) <= 0.3 * seleniumRDA
+          Number(seleniumValue) <= 0.3 * seleniumRDA
           ? true
           : false;
 
@@ -425,7 +434,7 @@ export default function MyForm({
     if (datos.Iodine) {
       datos.SourceSelenium =
         Number(iodineValue) > 0.15 * iodineRDA &&
-        Number(iodineValue) <= 0.3 * iodineRDA
+          Number(iodineValue) <= 0.3 * iodineRDA
           ? true
           : false;
 
@@ -576,12 +585,18 @@ export default function MyForm({
       await addDoc(foodsCollectionRefs, datos);
     }
 
+    //QUERY
+
+    const first = query(
+      foodsCollectionRefs,
+      orderBy(field, order),
+      limit(limitDocs)
+    );
+
     const getFoods = async () => {
-      const data = await getDocs(foodsCollectionRefs);
-      console.log(
-        "getFoods: ",
-        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      );
+
+      const data = await getDocs(first);
+      setAnchors(data.docs);
 
       setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       handleClose();
@@ -703,6 +718,7 @@ export default function MyForm({
     },
     required: "Required field",
   });
+
 
   /*
   const energykjInput = register("Energykj", {
@@ -1101,7 +1117,7 @@ export default function MyForm({
   console.log("Countrywatch", countryValue);
 
   const aValue = watch("A");
-  const carotenesValue = watch("BetaCarotenes"); 
+  const carotenesValue = watch("BetaCarotenes");
   const eValue = watch("E");
   const kValue = watch("K");
   const dValue = watch("D");
@@ -1205,7 +1221,7 @@ export default function MyForm({
           )}
 
 
-{/* 
+          {/* 
           {page === 3 && (
             <Pagina3
               energyValue={energyValue}
@@ -1298,6 +1314,7 @@ export default function MyForm({
                   type="submit"
                   color="info"
                   className="btn-round btn btn-info"
+                  onClick={useEffect}
                 >
                   ADD
                 </Button>
@@ -1319,13 +1336,13 @@ export default function MyForm({
             <div className="form group">
 
               {page !== 1 && (
-              <Button
-                onClick={goPrevPage}
-                color="default"
-                className="btn-round btn btn-default"
-              >
-                BACK
-              </Button>)}
+                <Button
+                  onClick={goPrevPage}
+                  color="default"
+                  className="btn-round btn btn-default"
+                >
+                  BACK
+                </Button>)}
             </div>
           </div>
         </div>
@@ -1338,10 +1355,10 @@ export default function MyForm({
           errors.TotalLipids ||
           errors.TotalProteins ||
           errors.TotalSugars) && (
-          <label className="error">
-            <code>Missing fields to fill</code>
-          </label>
-        )}
+            <label className="error">
+              <code>Missing fields to fill</code>
+            </label>
+          )}
       </CardFooter>
     </form>
   );

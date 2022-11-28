@@ -104,6 +104,7 @@ export function FoodTable() {
     }, [search]);
 
     const handleNext = async () => {
+        //console.log("foods[0] handlenext", foods[0].Name)
         const next = query(
             foodsCollectionRefs,
             where("Name", ">=", search),
@@ -121,10 +122,10 @@ export function FoodTable() {
     const handleBack = async () => {
 
         //const first = query(foodsCollectionRefs, orderBy("Name"), limit(12));
-        console.log("firstVisible.Name", typeof(firstVisible) )
-        console.log("foods[0]", foods[0].Name )
+        //console.log("firstVisible.Name", typeof (firstVisible))
+        //console.log("foods[0]", foods[0].Name)
 
-        if (foods[0].Name  === "13% protein curd" || foods[0].Name  === "8% protein curd") {
+        if (!isNaN(foods[0].Name.charAt(0))) {
             const first = query(foodsCollectionRefs, orderBy("Name"), limit(12));
             const getFoods = async () => {
                 console.log("getFoods")
@@ -147,7 +148,6 @@ export function FoodTable() {
                 foodsCollectionRefs,
                 where("Name", ">=", search),
                 where("Name", "<=", search + "\uf8ff"),
-                where("Name", "!=", "13% protein curd"),
                 orderBy(field, order),
                 endAt(firstVisible),
                 limitToLast(limitDocs)
@@ -171,14 +171,25 @@ export function FoodTable() {
     const deleteFood = async (food) => {
         await deleteDoc(doc(db, "data", food.id));
 
+        const first = query(
+            foodsCollectionRefs,
+            orderBy(field, order),
+            limit(limitDocs)
+        );
         const getFoods = async () => {
-            const data = await getDocs(foodsCollectionRefs);
+            
+            const data = await getDocs(first);
+            setAnchors(data.docs);
 
-            console.log(data);
             setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+            console.log(
+                setFoods(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+            );
         };
 
         getFoods();
+    
+
     };
 
     //---------------------------------------
@@ -435,6 +446,11 @@ export function FoodTable() {
                                                 handleClose={handleClose}
                                                 setFoods={setFoods}
                                                 showInfo={showInfo}
+                                                order = {order}
+                                                limitDocs = {limitDocs}
+                                                setAnchors = {setAnchors}
+                                                field =  {field}
+                                               
                                             />
                                         </ModalBody>
                                     </Modal>
