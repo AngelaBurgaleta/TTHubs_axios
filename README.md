@@ -25,14 +25,21 @@ password: ut23d8qxu4kyckpv
 ## Firebase hosting
 
 npm install -g firebase-tools
+
 firebase login
+
 firebase init
+
 Opcion only hosting 
+
 public dir? build
+
 ? Configure as a single-page app (rewrite all URLs to /index.html)? No
+
 ? Set up automatic builds and deploys with GitHub? No
 
 npm run build
+
 firebase deploy
 
 desplegado en: https://tt-hubs.web.app
