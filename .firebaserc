@@ -1,12 +1,12 @@
 {
   "projects": {
-    "tt-hubs": "upm-lifestech",
+    "tt-hubs-nutritionalmodule": "upm-lifestech",
     "default": "upm-lifestech"
   },
   "targets": {
     "upm-lifestech": {
       "hosting": {
-        "tt-hubs": [
+        "tt-hubs-nutritionalmodule": [
           "upm-lifestech"
         ]
       }
